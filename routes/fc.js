@@ -87,7 +87,7 @@ router.get('/', function(req, res) {
     if(error) {
       console.log("Error: " + error);
     }
-    console.log("Status code: " + response.statusCode);
+    console.log("fc: Status code: " + response.statusCode);
 
     //console.log(body);
 
@@ -99,8 +99,8 @@ router.get('/', function(req, res) {
       var title = $(this).find('a').text().trim();
       var link = $(this).find('a').attr('href');
 
-      console.log("Title: " + title);
-      console.log("Link: " + link);
+      // console.log("Title: " + title);
+      // console.log("Link: " + link);
       
       //processed link ;)
       var processed_link = link+"/posts/offer?page=1&resultsperpage=100&showall=off&include_offers=off&include_wanteds=off&include_receiveds=off&include_takens=off";
@@ -114,7 +114,7 @@ router.get('/', function(req, res) {
       //fs.appendFileSync('freecyclehome.txt', title + '\n' + score + '\n' + user + '\n');
     });
 
-    console.log("FINISHED FC pass 1");
+    // console.log("FINISHED FC pass 1");
 
     for(i = 0; i < pages_obj.length; i++){
     //for(i = 0; i < 2; i++){  // this actually works better if you dont try and process everything!!!! ;)
@@ -137,7 +137,7 @@ router.get('/', function(req, res) {
           //console.log("anchors: " + anchors);
           var the_title = $subpage(anchors[1]).text().trim();   //1 here is the second link, the one we are after!
           var the_link = $subpage(anchors[1]).attr('href');
-          console.log(the_title);
+          // console.log(the_title);
 
           items_obj.push({
             "the_link"  : the_link,
@@ -150,7 +150,7 @@ router.get('/', function(req, res) {
           //////////////////////////////////// dont use me //res.write("<p><a href='"+the_link+"'>"+page_title+" - "+the_title+"</a></p>");
         });
 
-        console.log(items_obj.length);
+        // console.log(items_obj.length);
 
 
 
@@ -164,7 +164,7 @@ router.get('/', function(req, res) {
   
   //res.send("DONE!!");
   setTimeout(function(){
-    console.log('Finished building list: ' + items_obj.length);
+    // console.log('Finished building list: ' + items_obj.length);
     var OUTER_this_link = "";
 
     for(j = 0; j < items_obj.length; j++){
@@ -178,7 +178,7 @@ router.get('/', function(req, res) {
 
       request(items_obj[j].the_link, function(error, response, body) {
         //console.log("page: %j", response.request.uri.href);
-        console.log(OUTER_this_link);
+        // console.log(OUTER_this_link);
         //res.write( response );
         //res.end();
 
@@ -212,10 +212,11 @@ router.get('/', function(req, res) {
 
     //res.end();
     setTimeout(function(){
-      console.log('FIN: ' + items_obj.length);
+      // console.log('FIN: ' + items_obj.length);
 
       res.write(outstring);
       res.end();
+      console.log('fc: end');
     },120000);
 
   },30000);
@@ -231,7 +232,7 @@ function scrapeHomepage() {
     if(error) {
       console.log("Error: " + error);
     }
-    console.log("Status code: " + response.statusCode);
+    // console.log("Status code: " + response.statusCode);
 
     var $ = cheerio.load(body);
 
@@ -239,8 +240,8 @@ function scrapeHomepage() {
       var title = $(this).find('a').text().trim();
       var link = $(this).find('a').attr('href');
 
-      console.log("Title: " + title);
-      console.log("Link: " + link);
+      // console.log("Title: " + title);
+      // console.log("Link: " + link);
       //fs.appendFileSync( 'freecyclelinks.txt', title + '\n' + link );
     });
   });

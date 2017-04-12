@@ -38,7 +38,14 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
+  console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress);
+
   res.render('index', { title: 'FreeScraper - freecycle scanner written in NodeJS' });
 });
+
+getClientAddress = function (req) {
+        return (req.headers['x-forwarded-for'] || '').split(',')[0] 
+        || req.connection.remoteAddress;
+};
 
 module.exports = router;

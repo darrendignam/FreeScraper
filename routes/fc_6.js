@@ -85,7 +85,7 @@ router.get('/', function(req, res) {
   ];
   // cant put to many pages here as the number of items across all pages causes issues....
 
-    console.log("FINISHED FC pass 1");
+    // console.log("FINISHED FC pass 1");
 
     for(i = 0; i < pages_obj.length; i++){
     //for(i = 0; i < 2; i++){
@@ -98,7 +98,7 @@ router.get('/', function(req, res) {
         if(error) {
           console.log("Error: " + error);
         }
-        //console.log("Status code: " + response.statusCode);
+        console.log("fc_6: Status code: " + response.statusCode);
         var $subpage = cheerio.load(body);
 
         var page_title = $subpage('head title').text().trim();
@@ -110,7 +110,7 @@ router.get('/', function(req, res) {
           //console.log("anchors: " + anchors);
           var the_title = $subpage(anchors[1]).text().trim();   //1 here is the second link, the one we are after!
           var the_link = $subpage(anchors[1]).attr('href');
-          console.log(the_title);
+          // console.log(the_title);
 
           items_obj.push({
             "the_link"  : the_link,
@@ -123,7 +123,7 @@ router.get('/', function(req, res) {
           //////////////////////////////////// dont use me //res.write("<p><a href='"+the_link+"'>"+page_title+" - "+the_title+"</a></p>");
         });
 
-        console.log(items_obj.length);
+        // console.log(items_obj.length);
 
         for(j = 0; j < items_obj.length; j++){
           //var this_link = items_obj[j].the_link;
@@ -134,7 +134,7 @@ router.get('/', function(req, res) {
 
             //console.log( response.req.href );  //.req.request.href );
 
-            console.log("page: %j", response.request.uri.href);
+            // console.log("page: %j", response.request.uri.href);
 
             //res.write( response );
             //res.end();
@@ -174,6 +174,7 @@ router.get('/', function(req, res) {
   //res.send("DONE!!");
   setTimeout(function(){
     res.end();
+    console.log('fc_6: end');
   },30000);
 
 });

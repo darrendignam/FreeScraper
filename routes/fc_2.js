@@ -54,7 +54,7 @@ router.get('/', function(req, res) {
     if(error) {
       console.log("Error: " + error);
     }
-    console.log("Status code: " + response.statusCode);
+    console.log("fc_2: Status code: " + response.statusCode);
 
     var $ = cheerio.load(body);
 
@@ -62,8 +62,8 @@ router.get('/', function(req, res) {
       var title = $(this).find('a').text().trim();
       var link = $(this).find('a').attr('href');
 
-      console.log("Title: " + title);
-      console.log("Link: " + link);
+      //console.log("Title: " + title);
+      //console.log("Link: " + link);
       
       //processed link ;)
       var processed_link = link+"/posts/offer?page=1&resultsperpage=100&showall=off&include_offers=off&include_wanteds=off&include_receiveds=off&include_takens=off";
@@ -75,7 +75,7 @@ router.get('/', function(req, res) {
       //fs.appendFileSync('freecycle.txt', DATA + '\n'); //If you would like to have a textfile of the result, then use a command like this with something in DATA // DATA = processed_link??
     });
 
-    console.log("FINISHED FC pass 1");
+    //console.log("FINISHED FC pass 1");
 
     for(i = 0; i < pages_obj.length; i++){
       //start looking at all the links on all the pages!!! :))
@@ -86,7 +86,7 @@ router.get('/', function(req, res) {
         if(error) {
           console.log("Error: " + error);
         }
-        console.log("Status code: " + response.statusCode);
+        //console.log("Status code: " + response.statusCode);
         var $subpage = cheerio.load(body);
 
         var page_title = $subpage('head title').text().trim();
@@ -94,11 +94,11 @@ router.get('/', function(req, res) {
 
         $subpage('#group_posts_table tr').each(function( index ) {
           var anchors = $subpage(this).find('a');
-          console.log("num "+anchors.length )
+          //console.log("num "+anchors.length )
           //console.log("anchors: " + anchors);
           var the_title = $subpage(anchors[1]).text().trim();   //1 here is the second link, the one we are after!
           var the_link = $subpage(anchors[1]).attr('href');
-          console.log(the_title);
+          //console.log(the_title);
 
           res.write("<p><a target='_BLANK' href='"+the_link+"'>"+the_title+"</a></p>");
           //send the item link to the users browser
@@ -114,6 +114,7 @@ router.get('/', function(req, res) {
   //This script can misbehave a bit, so I have set a manual delay of 30 seconds before closing the HTTP request to the client so we dont get errors onthe server.
   setTimeout(function(){
     res.end(); //the page in the users browser will never finish loading if you dont send this, send it immediately and the browser and server will cry as the closure functions will try to send data after the fact.
+    console.log('fc_2: end');
   },30000);
 
 });
