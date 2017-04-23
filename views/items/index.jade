@@ -16,7 +16,7 @@ block content
   
 	div(class='container') 
 		h1= title
-		table
+		table(class='table table-striped table-hover')
 			each val in items
 				tr
 					
@@ -25,5 +25,8 @@ block content
 						a(href=val.url target='_blank' style='color:lightblue')=val.item
 					td
 						=val.freecycleGroup
+					//-td
+						//-=val.postdata
 					td
-						=val.postdata
+						img(src=val.thumbnail alt='' style='max-height:200px;max-width:200px;')
+
