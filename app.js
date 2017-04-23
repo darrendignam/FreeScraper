@@ -38,15 +38,36 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose'); 
+var Schema = mongoose.Schema;
+
+mongoose.connect('mongodb://heroku_jt8w96fw_user:thedoctorwashere1900@ds163010.mlab.com:63010/heroku_jt8w96fw');
+// { user: "heroku_jt8w96fw", account: "heroku_jt8w96fw" }
 
 var routes = require('./routes/index');
+var api = require('./routes/api');
 var fc = require('./routes/fc');
 var fc_2 = require('./routes/fc_2');  //most useful route ?? The others are experimental
 var fc_3 = require('./routes/fc_3');
 var fc_4 = require('./routes/fc_4');
 var fc_6 = require('./routes/fc_6');
 
+//var job_scrape_london = require('./routes/scrape_london');
+//var job_scrape_groups = require('./routes/scrape_get_group_pages');
+var update_scrape_groups = require('./routes/update_scrape_groups');
+var update_scrape_items = require('./routes/update_scrape_items');
+var update_remove_dead_items = require('./routes/update_remove_dead_items');
+var update_group_gps = require('./routes/update_group_gps');
+var scrape_get_group_pages = require('./routes/scrape_get_group_pages');
+
+var job_list_items = require('./routes/job_list_items');
+
+
+
 var app = express();
+
+var http = require('http');
+http.globalAgent.maxSockets = 20;
 
 // app.set('port', 3000);
 app.set('port', process.env.PORT || 3000);
@@ -63,11 +84,24 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+app.use('/api', api);
 app.use('/fc', fc);
 app.use('/fc_2', fc_2);
 app.use('/fc_3', fc_3);
 app.use('/fc_4', fc_4);
 app.use('/fc_6', fc_6);
+
+//app.use('/job_scrape_london', job_scrape_london); //sends links to the DB
+//app.use('/job_scrape_groups', job_scrape_groups); //grabs group pages into the DB - all should be scraped now
+app.use('/update_scrape_groups', update_scrape_groups); //sends links to the DB
+app.use('/update_scrape_items', update_scrape_items); //sends links to the DB
+app.use('/update_remove_dead_items', update_remove_dead_items);
+app.use('/update_group_gps', update_group_gps);
+app.use('/scrape_get_group_pages', scrape_get_group_pages);
+
+app.use('/job_list_items', job_list_items);
+
+
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

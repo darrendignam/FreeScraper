@@ -44,15 +44,17 @@ var cheerio = require('cheerio');  //Makes accessing the data from the requests 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var FreeGroup = require('../models/freegroup');
+
 /* GET home page. */
 router.get('/', function(req, res) {
 
-  res.writeHead(200, { "Content-Type" : "text/html" })
+  //res.writeHead(200, { "Content-Type" : "text/html" })
 
   //var out_str = ""; meh, just sendd data directtly to the client
   var pages_obj = [];
 
-  request("https://www.freecycle.org/browse/UK/London", function(error, response, body) {
+  request("https://www.freecycle.org/browse/UK/Yorkshire%20and%20the%20Humber", function(error, response, body) {
     // This URL has anchors to the London group pages
     if(error) {
       console.log("Error: " + error);
@@ -62,64 +64,72 @@ router.get('/', function(req, res) {
     var $ = cheerio.load(body);
 
     $('article#active_groups li').each(function( index ) {
-      var title = $(this).find('a').text().trim();
+      //var title = $(this).find('a').text().trim();
       var link = $(this).find('a').attr('href');
 
-      //console.log("Title: " + title);
-      //console.log("Link: " + link);
-      
-      //processed link ;)
-      var processed_link = link+"/posts/offer?page=1&resultsperpage=100&showall=off&include_offers=off&include_wanteds=off&include_receiveds=off&include_takens=off";
-      //get the top 100 offers right now! :) I used the address bar to figure out this nice URL querystring format
+      //var processed_link = link ; //+"/posts/offer?page=1&resultsperpage=100&showall=off&include_offers=off&include_wanteds=off&include_receiveds=off&include_takens=off";
 
-      pages_obj.push(processed_link);
-      //push our newley generated URIs into an arry for the next step
+      pages_obj.push(link);
+      //add to DB...
 
-      //fs.appendFileSync('freecycle.txt', DATA + '\n'); //If you would like to have a textfile of the result, then use a command like this with something in DATA // DATA = processed_link??
+          //Setup stuff
+          var query = {'url': link };
+          var update = {
+            updatedDate: new Date(),
+            url: link//,
+            //item: the_title//,
+            //freecycleGroup: destUrl
+          };
+          //var options = { upsert: true };
+          var options = {  };
+
+          // Find the document
+          FreeGroup.findOneAndUpdate(query, update, options, function(error, result) {
+              if (!error) {
+                  // If the document doesn't exist
+                  if (!result) {
+                      // Create it
+                      result = new FreeGroup({
+                         updatedDate: new Date(),
+                          url: link//,
+                      });
+                      //console.log("Saved new");
+                  } else {
+                    //console.log("result: %j", result);
+                    //console.log("Updated");
+                  }
+                  // Save the document
+                  result.save(function(error) {
+                      if (!error) {
+                          // Do something with the document
+                          //console.log("Saved new");
+                      } else {
+                          console.log("error: %j", error);
+                          throw error;
+                      }
+                  });
+              }else{
+                console.log("error: %j", error);
+              }
+          });
+
+
     });
+
+    //console.log("%j", pages_obj);
 
     //console.log("FINISHED FC pass 1");
 
-    for(i = 0; i < pages_obj.length; i++){
-      //start looking at all the links on all the pages!!! :))
-      //var page_title = $('head title').text().trim(); // this is from the previous 'home' / starting page....
-      //console.log(page_title + " - " + pages_obj[i]);
+    // for(i = 0; i < pages_obj.length; i++){
+    //   //start looking at all the links on all the pages!!! :))
+    //   //var page_title = $('head title').text().trim(); // this is from the previous 'home' / starting page....
+    //   // console.log( pages_obj );
 
-      request(pages_obj[i], function(error, response, body) {
-        if(error) {
-          console.log("Error: " + error);
-        }
-        //console.log("Status code: " + response.statusCode);
-        var $subpage = cheerio.load(body);
+    // }
 
-        var page_title = $subpage('head title').text().trim();
-        res.write("<h2>"+page_title+"</h2>");
-
-        $subpage('#group_posts_table tr').each(function( index ) {
-          var anchors = $subpage(this).find('a');
-          //console.log("num "+anchors.length )
-          //console.log("anchors: " + anchors);
-          var the_title = $subpage(anchors[1]).text().trim();   //1 here is the second link, the one we are after!
-          var the_link = $subpage(anchors[1]).attr('href');
-          //console.log(the_title);
-
-          res.write("<p><a target='_BLANK' href='"+the_link+"'>"+the_title+"</a></p>");
-          //send the item link to the users browser
-
-          //res.write("<p><a href='"+the_link+"'>"+page_title+" - "+the_title+"</a></p>");
-        });
-      });
-    }
-    //res.send(out_str); //this was not working as well for me so I have changed the output using res.write above.
+    console.log( pages_obj );
+    res.send('Processing data.... %j', pages_obj);
   });
-  
-  //res.send("DONE!!");
-  //This script can misbehave a bit, so I have set a manual delay of 30 seconds before closing the HTTP request to the client so we dont get errors onthe server.
-  setTimeout(function(){
-    res.end(); //the page in the users browser will never finish loading if you dont send this, send it immediately and the browser and server will cry as the closure functions will try to send data after the fact.
-    console.log('fc_2: end');
-  },30000);
-
 });
 
 module.exports = router;

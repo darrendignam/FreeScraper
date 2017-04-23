@@ -1,0 +1,29 @@
+//- Freescraper main worker displays results :)
+
+extends ../layout
+
+block content
+
+	div(class='navbar navbar-default navbar-fixed-top')
+		div(class='container')
+			div(class='navbar-header')
+				a(href='/' class='navbar-brand') FreeScraper
+				ul(class='nav navbar-nav')
+						li 
+							a(href='/') Search
+						li 
+							a(href='/') About
+  
+	div(class='container') 
+		h1= title
+		table
+			each val in items
+				tr
+					
+					//- img(src=val.picture alt='')
+					td 
+						a(href=val.url target='_blank' style='color:lightblue')=val.item
+					td
+						=val.freecycleGroup
+					td
+						=val.postdata

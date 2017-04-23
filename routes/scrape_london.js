@@ -44,10 +44,13 @@ var cheerio = require('cheerio');  //Makes accessing the data from the requests 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var FreeItem = require('../models/freeitem');
+//var Person = mongoose.model('Person', yourSchema);
+
 /* GET home page. */
 router.get('/', function(req, res) {
 
-  res.writeHead(200, { "Content-Type" : "text/html" })
+  //res.writeHead(200, { "Content-Type" : "text/html" })
 
   //var out_str = ""; meh, just sendd data directtly to the client
   var pages_obj = [];
@@ -78,6 +81,8 @@ router.get('/', function(req, res) {
       //fs.appendFileSync('freecycle.txt', DATA + '\n'); //If you would like to have a textfile of the result, then use a command like this with something in DATA // DATA = processed_link??
     });
 
+    //console.log("%j", pages_obj);
+
     //console.log("FINISHED FC pass 1");
 
     for(i = 0; i < pages_obj.length; i++){
@@ -93,7 +98,7 @@ router.get('/', function(req, res) {
         var $subpage = cheerio.load(body);
 
         var page_title = $subpage('head title').text().trim();
-        res.write("<h2>"+page_title+"</h2>");
+        //res.write("<h2>"+page_title+"</h2>");
 
         $subpage('#group_posts_table tr').each(function( index ) {
           var anchors = $subpage(this).find('a');
@@ -103,7 +108,83 @@ router.get('/', function(req, res) {
           var the_link = $subpage(anchors[1]).attr('href');
           //console.log(the_title);
 
-          res.write("<p><a target='_BLANK' href='"+the_link+"'>"+the_title+"</a></p>");
+
+          // if(this.redirects.length){
+          //     var destUrl = this.redirects[this.redirects.length-1].redirectUri;
+          //     console.log(destUrl);
+          // }
+
+          // console.log("%j", response['request']['redirects'])
+          // destUrl = response['request']['redirects'];
+
+          // Add to the DB
+
+          // FreeItem.update({'url': the_link}, {
+          //   updatedDate: new Date(),
+          //   url: the_link,
+          //   item: the_title//,
+          //   //freecycleGroup: destUrl
+          // }, function(err, numberAffected, rawResponse) {
+          //    //handle it
+          //    console.log("%j", err);
+          //    console.log("%j", numberAffected);
+          //    console.log("%j", rawResponse);
+          // });
+
+          // FreeItem.findOne({ 'url': the_link }, function (err, foundItem) {
+          //   if (err){
+          //     return handleError(err);
+          //   } else {
+          //     //console.log('%s found (%s)', foundItem.item, foundItem.url) // Space Ghost is a talk show host.
+          //     console.log("%j", foundItem); //finds a load of null bvalues, so i guess i should check for that too.... trying sometthing new
+          //   }
+          // });
+
+          //Setup stuff
+          var query = {'url': the_link };
+          var update = {
+            updatedDate: new Date(),
+            url: the_link,
+            item: the_title//,
+            //freecycleGroup: destUrl
+          };
+          //var options = { upsert: true };
+          var options = {  };
+
+          // Find the document
+          FreeItem.findOneAndUpdate(query, update, options, function(error, result) {
+              if (!error) {
+                  // If the document doesn't exist
+                  if (!result) {
+                      // Create it
+                      result = new FreeItem({
+                         updatedDate: new Date(),
+                          url: the_link,
+                          item: the_title//,
+                      });
+                      //console.log("Saved new");
+                  } else {
+                    //console.log("result: %j", result);
+                    //console.log("Updated");
+                  }
+                  // Save the document
+                  result.save(function(error) {
+                      if (!error) {
+                          // Do something with the document
+                          //console.log("Saved new");
+                      } else {
+                          console.log("error: %j", error);
+                          throw error;
+                      }
+                  });
+              }else{
+                console.log("error: %j", error);
+              }
+          });
+
+
+
+          //res.write("<p><a target='_BLANK' href='"+the_link+"'>"+the_title+"</a></p>");
           //send the item link to the users browser
 
           //res.write("<p><a href='"+the_link+"'>"+page_title+" - "+the_title+"</a></p>");
@@ -111,14 +192,17 @@ router.get('/', function(req, res) {
       });
     }
     //res.send(out_str); //this was not working as well for me so I have changed the output using res.write above.
+
+    res.send('Processing data....');
+
   });
   
   //res.send("DONE!!");
   //This script can misbehave a bit, so I have set a manual delay of 30 seconds before closing the HTTP request to the client so we dont get errors onthe server.
-  setTimeout(function(){
-    res.end(); //the page in the users browser will never finish loading if you dont send this, send it immediately and the browser and server will cry as the closure functions will try to send data after the fact.
-    console.log('fc_2: end');
-  },30000);
+  // setTimeout(function(){
+  //   res.end(); //the page in the users browser will never finish loading if you dont send this, send it immediately and the browser and server will cry as the closure functions will try to send data after the fact.
+  //   console.log('fc_2: end');
+  // },30000);
 
 });
 
