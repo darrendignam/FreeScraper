@@ -14,30 +14,31 @@ block content
 
 	div(class='container')
 		h1= title
-		p(style='white-space:pre;font-family:monospace;font-weight:bold;font-size:75%')
-			|     ________ .-------.        .-''-.      .-''-.     .-'''-.     _______   .-------.       ____    .-------.     .-''-.  .-------.     
-			|    |        ||  _ _   \     .'_ _   \   .'_ _   \   / _     \   /   __  \  |  _ _   \    .'  __ `. \  _(`)_ \  .'_ _   \ |  _ _   \    
-			|    |   .----'| ( ' )  |    / ( ` )   ' / ( ` )   ' (`' )/`--'  | ,_/  \__) | ( ' )  |   /   '  \  \| (_ o._)| / ( ` )   '| ( ' )  |    
-			|    |  _|____ |(_ o _) /   . (_ o _)  |. (_ o _)  |(_ o _).   ,-./  )       |(_ o _) /   |___|  /  ||  (_,_) /. (_ o _)  ||(_ o _) /    
-			|    |_( )_   || (_,_).' __ |  (_,_)___||  (_,_)___| (_,_). '. \  '_ '`)     | (_,_).' __    _.-`   ||   '-.-' |  (_,_)___|| (_,_).' __  
-			|    (_ o._)__||  |\ \  |  |'  \   .---.'  \   .---..---.  \  : > (_)  )  __ |  |\ \  |  |.'   _    ||   |     '  \   .---.|  |\ \  |  | 
-			|    |(_,_)    |  | \ `'   / \  `-'    / \  `-'    /\    `-'  |(  .  .-'_/  )|  | \ `'   /|  _( )_  ||   |      \  `-'    /|  | \ `'   / 
-			|    |   |     |  |  \    /   \       /   \       /  \       /  `-'`-'     / |  |  \    / \ (_ o _) //   )       \       / |  |  \    /  
-			|    '---'     ''-'   `'-'     `'-..-'     `'-..-'    `-...-'     `._____.'  ''-'   `'-'   '.(_,_).' `---'        `'-..-'  ''-'   `'-'   
 		p Welcome to FreeScraper - A handy utility to help search through freecycle listings
-		p There are various versions of the tool, that produce different results. But generally you will get a list of links that will take you to the actual item listing on freecycle. Use the links below to generate the listings. The tool has been developed with London in mind. But this code is open source, so please use it as you see fit. It was hurriedly created in NodeJS to meet a very specific searching need, and has been released into the wild due to popular demand. Get a copy from github!
-		h3 These are the main scripts:
+		div(id='map_container' style='width:100%;height:700px')
+		
+		p You can find the groups near you and see whats being offered. Or you can search for items near you regardless of the group
+
+		div
+			p experimental API links:
+				ul
+					li: a(href="/api/group/Hackney", target="_blank") All Hackney
+					li: a(href="/api/search/Printer", target="_blank") All Printers
+					li: a(href="/api/group/Hackney/bed", target="_blank") All Beds in Hackney
+					li: a(href="/api/near/-0.0555256/51.5599178", target="_blank") All items near Hackney
+
+		h4 These are the older scripts
 		ul
-			li(style="font-size:300%"): a(href="fc_2", title="All of London" target="_blank") All of London (Click Me!)
+			li(style="font-size:200%"): a(href="fc_2", title="All of London" target="_blank") All of London (Click Me!)
 			li: a(href="fc_6", title="Detailed look around north london" target="_blank") Detailed look around some North London groups
-		h3 Detailed listings of some group pages - these links are a bit experimental and can cause memory issues on the server and bug out...
+		h4 Detailed listings of some group pages - these links are a bit experimental and can cause memory issues on the server and bug out...
 		ul
 			li: a(href="fc_3?target=http://groups.freecycle.org/HaringeyUK", title="Haringey Detailed" target="_blank") Haringey Detailed
 			li: a(href="fc_3?target=http://groups.freecycle.org/CamdenSouthUK", title="Camden South Detailed" target="_blank") Camden South Detailed
 			li: a(href="fc_3?target=http://groups.freecycle.org/HackneyUK", title="Hackney Detailed" target="_blank") Hackney Detailed
 			li: a(href="fc_3?target=http://groups.freecycle.org/CityOfLondon", title="General London Group" target="_blank") General London Group
 		div
-			h3 Use this form to get a detailed listing of any freecycle group
+			h4 Use this form to get a detailed listing of any freecycle group
 			p Paste the group page URL and see the result. The last few links above use this method...
 			form(action='/fc_3',method='get',target='_blank')
 				input(id='target',type='text',value='',placeholder='freecycle group page',name='target')
@@ -48,17 +49,8 @@ block content
 			p This is an open source project released with the GPLv3 license. The source code is avaliable over at 
 			a(href="https://github.com/darrendignam/FreeScraper", title="Source Code" target="_blank") https://github.com/darrendignam/FreeScraper
 
-		div
-			p
-				experimental API links:
-
-
-				ul
-					li: a(href="/api/group/Hackney", target="_blank") All Hackney
-					li: a(href="/api/search/Printer", target="_blank") All Printers
-					li: a(href="/api/group/Hackney/bed", target="_blank") All Beds in Hackney
-					li: a(href="/api/near/-0.0555256/51.5599178", target="_blank") All items near Hackney
 
 
 
-		p(style='width:300px;margin:0 auto;') © 2017 Darren Dignam
+	script(src='/javascripts/freescrapermap.js')
+	p(style='width:300px;margin:0 auto;text-align:center') © 2017 Darren Dignam

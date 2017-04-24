@@ -38,7 +38,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress);
+  console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress(req));
 
   res.render('index', { title: 'FreeScraper - freecycle scanner written in NodeJS' });
 });

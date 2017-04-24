@@ -37,14 +37,17 @@
 var express = require('express');  
 var router = express.Router();
 
-var request = require('request');  //lets us get the data from a URL - freecycle in this case
-var cheerio = require('cheerio');  //Makes accessing the data from the requests easier, jQuery-like notation
+var moment = require('moment');
+
+// var request = require('request');  //lets us get the data from a URL - freecycle in this case
+// var cheerio = require('cheerio');  //Makes accessing the data from the requests easier, jQuery-like notation
 // var fs = require('fs');
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var Item = require('../models/item');
+var FreeGroup = require('../models/freegroup');
 
 // var startdate = new Date('2014-05-18T20:00:00.000Z');
 // var enddate = Date();  // new Date('2014-05-19T20:00:00.000Z');
@@ -62,7 +65,15 @@ var Item = require('../models/item');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  mongoose.model('Item').find({}, function (err, items) {
+  res.render('index', { title: 'FreeScraper - freecycle scanner written in NodeJS' });
+});
+
+router.get('/all', function(req, res) {
+  mongoose.model('Item')
+    .find({})
+    .limit(100)
+    .sort({postdata: -1})
+    .exec(function (err, items) {
               if (err) {
                   return console.error(err);
               } else {
@@ -75,7 +86,8 @@ router.get('/', function(req, res) {
 			                    html: function(){
 			                       res.render('items/index', {
 			                              title: 'All items',
-			                              "items" : items
+			                              "items" : items,
+                                    moment: moment
 			                          });
 			                    },
 			                    // JSON response will show all blobs in JSON format
@@ -84,13 +96,23 @@ router.get('/', function(req, res) {
 			                   }
 			                });
               }     
-       });
+    });
 });
 
 
 
 router.get('/group/:groupString/:searchString', function(req, res) {
-  mongoose.model('Item').find({ "freecycleGroup": { $regex : new RegExp( req.params.groupString, "i") }, "item" : { $regex : new RegExp( req.params.searchString, "i") } }).sort({postdata: -1}).exec( function (err, items) {
+  mongoose.model('Item')
+    .find({ 
+      "freecycleGroup": { $regex : new RegExp( req.params.groupString, "i") }, 
+      $or : [
+           {"item" : { $regex : new RegExp( req.params.searchString, "i") } },
+           {"description" : { $regex : new RegExp( req.params.searchString, "i") } }
+        ] 
+    })
+    .sort({postdata: -1})
+    .limit(100)
+    .exec( function (err, items) {
               if (err) {
                   return console.error(err);
               } else {
@@ -103,7 +125,8 @@ router.get('/group/:groupString/:searchString', function(req, res) {
                           html: function(){
                              res.render('items/index', {
                                     title: 'Search: '+req.params.searchString+ ' in '+req.params.groupString,
-                                    "items" : items
+                                    "items" : items,
+                                    moment: moment
                                 });
                           },
                           // JSON response will show all blobs in JSON format
@@ -116,7 +139,11 @@ router.get('/group/:groupString/:searchString', function(req, res) {
 });
 
 router.get('/group/:groupString', function(req, res) {
-  mongoose.model('Item').find({ freecycleGroup: { $eq: req.params.groupString } }).sort({postdata: -1}).exec( function (err, items) {
+  mongoose.model('Item')
+    .find({ freecycleGroup: { $eq: req.params.groupString } })
+    .sort({postdata: -1})
+    .limit(100)
+    .exec( function (err, items) {
               if (err) {
                   return console.error(err);
               } else {
@@ -129,7 +156,8 @@ router.get('/group/:groupString', function(req, res) {
                           html: function(){
                              res.render('items/index', {
                                     title: 'Group: '+req.params.groupString,
-                                    "items" : items
+                                    "items" : items,
+                                    moment: moment
                                 });
                           },
                           // JSON response will show all blobs in JSON format
@@ -142,7 +170,16 @@ router.get('/group/:groupString', function(req, res) {
 });
 
 router.get('/search/:searchString', function(req, res) {
-  mongoose.model('Item').find( { "item" : { $regex : new RegExp( req.params.searchString, "i") }}).sort({postdata: -1}).exec(function (err, items) {
+  mongoose.model('Item')
+    .find( { 
+        $or : [
+           {"item" : { $regex : new RegExp( req.params.searchString, "i") } },
+           {"description" : { $regex : new RegExp( req.params.searchString, "i") } }
+        ]
+    })
+    .sort({postdata: -1})
+    .limit(100)
+    .exec(function (err, items) {
 //    { "item" : { $regex : /Bookcase/i } }
 //    { "item" : { $regex : new RegExp(thesearch, "i") } }
               if (err) {
@@ -157,7 +194,8 @@ router.get('/search/:searchString', function(req, res) {
                           html: function(){
                              res.render('items/index', {
                                     title: 'Search: '+req.params.searchString,
-                                    "items" : items
+                                    "items" : items,
+                                    moment: moment
                                 });
                           },
                           // JSON response will show all blobs in JSON format
@@ -177,7 +215,11 @@ router.get('/near/:lng/:lat', function(req, res) {
 
 // { latlngADDR : {$near: {$geometry: {type: "Point" ,coordinates: [ <longitude> , <latitude> ]},$maxDistance: <distance in meters>,$minDistance: <distance in meters>     }   }}
 //51.5599178,-0.055525600000009945 = E5 8BQ
-  mongoose.model('Item').find({'locationGPS' : {$near: {$geometry: {type: "Point" ,coordinates: [ req.params.lng , req.params.lat ]},$maxDistance: 10000,$minDistance: 0}}} , function (err, items) {
+  mongoose.model('Item')
+    .find({'locationGPS' : {$near: {$geometry: {type: "Point" ,coordinates: [ req.params.lng , req.params.lat ]},$maxDistance: 10000,$minDistance: 0}}})
+    .sort({postdata: -1})
+    .limit(100)
+    .exec(function (err, items) {
   //mongoose.model('Item').find({'locationGPS' : {$near: {$geometry: {type: "Point" ,coordinates: [ '-0.055525600' , '51.5599178' ]},$maxDistance: 10000,$minDistance: 0}}} , function (err, items) {
               if (err) {
                   return console.error(err);
@@ -191,7 +233,8 @@ router.get('/near/:lng/:lat', function(req, res) {
                           html: function(){
                              res.render('items/index', {
                                     title: 'All items',
-                                    "items" : items
+                                    "items" : items,
+                                    moment: moment
                                 });
                           },
                           // JSON response will show all blobs in JSON format
@@ -225,7 +268,8 @@ router.get('/distance/:lng/:lat', function(req, res) {
                           html: function(){
                              res.render('items/searchnear', {
                                     title: 'All items',
-                                    "items" : items
+                                    "items" : items,
+                                    moment: moment
                                 });
                           },
                           // JSON response will show all blobs in JSON format
@@ -237,5 +281,36 @@ router.get('/distance/:lng/:lat', function(req, res) {
        });
 });
 
+router.get('/groups', function(req, res) {
+  
+  mongoose.model('FreeGroup')
+    .find({})
+    .exec(function (err, groups) {
+      //console.log("%j", groups);
+              if (err) {
+                  return console.error(err);
+              } else {
+                        //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+
+                 //res.json( items );
+
+                      res.format({
+                            //HTML response will render the index.ejs file in the views/items folder. We are also setting "items" to be an accessible variable in our view
+                          html: function(){
+                             res.render('items/groups', {
+                                    title: 'All groups',
+                                    "groups" : groups,
+                                    moment: moment
+                                });
+                          },
+                          // JSON response will show all blobs in JSON format
+                         json: function(){
+                              res.json(groups);
+                         }
+                      });
+              }     
+    });
+
+});
 
 module.exports = router;

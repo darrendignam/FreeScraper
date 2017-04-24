@@ -32,63 +32,9 @@
     *************************************************************************************************************************************
 */
 
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 480px) {
-/* Styles */
-}
-
-/* iPads (portrait and landscape) ----------- */
-@media only screen 
-and (min-device-width : 768px) 
-and (max-device-width : 1024px) {
-/* Styles */
-}
-
-/* Desktops and laptops ----------- */
-@media only screen 
-and (min-width : 1224px) {
-/* Styles */
-}
-
-/* iPhone 4 ----------- */
-@media
-only screen and (-webkit-min-device-pixel-ratio : 1.5),
-only screen and (min-device-pixel-ratio : 1.5) {
-/* Styles */
-}
-
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-}
-
-a {
-  color: #00B7FF;
-}
-
-.itemthumb{
-    max-height:400px;
-    max-width:400px;
-}
-.itemthumb img{
-    width:100%;
-    height:100%;
-    margin:0 auto;
-    cursor:pointer;
-}
-
-.modal_dialog img{
-    margin: 0 auto;
-}
-
-.item_details{
-    font-size:75%;
-    font-style: italic;
-    color: #ccc;
-}
-
-.map_infowindow{
-    color: #333;
-}
+$(function() {
+	$(".itemthumb img").click(function() {
+		var tmpWidth = Math.floor($(window).width() * 0.8); 
+	    $('<div><div class="modal_dialog"><img src="'+ $(this).attr('src').replace("post_thumb", "post_image") +'" /></div><div>').dialog({minWidth:tmpWidth});
+	});
+});

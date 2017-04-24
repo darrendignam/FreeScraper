@@ -1,0 +1,41 @@
+//- Freescraper main worker displays results :)
+
+extends ../layout
+
+block content
+
+	div(class='navbar navbar-default navbar-fixed-top')
+		div(class='container')
+			div(class='navbar-header')
+				a(href='/' class='navbar-brand') FreeScraper
+				ul(class='nav navbar-nav')
+						li 
+							a(href='/') Search
+						li 
+							a(href='/') About
+  
+	div(class='container') 
+		h1= title
+		table(class='table table-striped table-hover')
+			-i=0
+			each val in groups
+				-i++
+				tr
+					td
+						=i
+					td 
+						//- =val.title
+						a(href='/api/group/#{val.title}' target='_blank' style='color:lightblue')=val.title
+					td(class='item_details')
+						p
+							=val.region
+						p
+							=val.locationGPS
+						p
+							a(href=val.url target='_blank' style='color:lightblue')=val.url
+							
+
+							
+
+
+	p(style='width:300px;margin:0 auto;text-align:center') freescraper © 2017 Darren Dignam
