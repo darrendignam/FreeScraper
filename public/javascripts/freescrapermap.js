@@ -45,6 +45,7 @@ $(function() {
         infoWindowLocation.setContent('<span class="map_infowindow" >Your Location </span>');
         infoWindowLocation.open(map);
         map.setCenter(pos);
+        map.setZoom(10);
       }, function() {
         handleLocationError(true, infoWindowLocation, map.getCenter());
       });
