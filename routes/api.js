@@ -236,6 +236,7 @@ router.get('/near/:lng/:lat/:distance/:searchString', function(req, res) {
                                     title: 'Location Search: '+req.params.searchString,
                                     the_lat : req.params.lat,
                                     the_lng : req.params.lng,
+                                    the_search : req.params.searchString,
                                     "items" : items,
                                     moment: moment
                                 });

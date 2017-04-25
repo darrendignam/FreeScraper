@@ -20,8 +20,9 @@ block content
 		p You can find the groups near you and see whats being offered. Or you can search for items near you regardless of the group
 	script.
 		var search_address = window.location.href;
-		var the_lat = #{the_lat}
-		var the_lng = #{the_lng}
+		var the_lat = #{the_lat};
+		var the_lng = #{the_lng};
+		var the_search = #{the_search}
 
 	script(src='/javascripts/freescrapermapsearch.js')
 	p(style='width:300px;margin:0 auto;text-align:center') © 2017 Darren Dignam
