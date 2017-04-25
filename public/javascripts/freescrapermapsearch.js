@@ -5,7 +5,7 @@ var infoWindowLocation;
 $(function() { 
 	//alert('MAP!')
 	//map = new GMaps({ div: '#map_container', lat: 52.944236,  lag: -1.378722 }); 
-   	map = new google.maps.Map(document.getElementById('map_container'), {
+  map = new google.maps.Map(document.getElementById('map_container'), {
     	center: {lat: 54.196248, lng: -4.477640}, 
     	zoom: 6
 	});
@@ -13,8 +13,13 @@ $(function() {
   infoWindowLocation.setPosition({ lat: the_lat, lng: the_lng });
   infoWindowLocation.setContent('<span class="map_infowindow" >"'+the_search+'" Near Here</span>');
   infoWindowLocation.open(map);
+  map.setCenter({
+    lat: the_lat,
+    lng: the_lng
+  });
+  map.setZoom(12);
 
-   	//go get the group pages...
+   	//go get the group pages... //this can be improved...
    	$.getJSON(window.location.href, function(result){
         map.setZoom(12);
         map.setCenter({
@@ -41,15 +46,28 @@ $(function() {
         	map_infowindows.push( infowindow );
         });
 
-
-
-
-
     });
 
+  google.maps.event.addListener(map, 'dragend', function () {
+      $('#input_search_address_locked').val( this.getCenter().lat()+','+this.getCenter().lng() );
 
+      var search_string = $('#input_search_term_local').val();
+      var target_url = '/api/near/'+this.getCenter().lng()+'/'+this.getCenter().lat()+'/10000/'+ search_string;
 
+      infoWindowLocation.setPosition( this.getCenter() );
+      infoWindowLocation.setContent('<span class="map_infowindow" ><a href="'+target_url+'">Search again Near Here</a></span>');    
+      //console.log(this.getCenter());
+      // myMarker.setPosition(this.getCenter()); // set marker position to map center
+      // updatePosition(this.getCenter().lat(), this.getCenter().lng()); // update position display
+  });
 
+  $("#input_search_term").keypress(function(e) {
+      if(e.which == 13) {
+          //alert('You pressed enter!');
+          window.location.href = '/api/group/'+$("#input_search_group_picker").val() +'/'+$("#input_search_term").val()  ;
+      }
+  });
+  
 });
 
 function closeAllMarkers(){

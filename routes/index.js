@@ -40,7 +40,12 @@ var router = express.Router();
 router.get('/', function(req, res) {
   console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress(req));
 
-  res.render('index', { title: 'FreeScraper - freecycle scanner written in NodeJS' });
+  res.render('index', { title: 'FreeScraper' });
+});
+
+router.get('/search', function(req, res) {
+  // console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress(req));
+  res.render('search_freescraper', { title: 'FreeScraper' });
 });
 
 getClientAddress = function (req) {

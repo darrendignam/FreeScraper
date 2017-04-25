@@ -4,45 +4,76 @@ extends ../layout
 
 block content
 
-	div(class='navbar navbar-default navbar-fixed-top')
-		div(class='container')
+	nav(class='navbar navbar-inverse navbar-fixed-top')
+		div(class='container-fluid')
 			div(class='navbar-header')
-				a(href='/' class='navbar-brand') FreeScraper
+				button(type='button' class='navbar-toggle' data-toggle='collapse' data-target='#mynavbar')
+					span(class='icon-bar')
+					span(class='icon-bar')
+					span(class='icon-bar')
+				a(class='navbar-brand' href='/') freescraper 
+			div(class='collapse navbar-collapse' id='mynavbar')
 				ul(class='nav navbar-nav')
-						li 
-							a(href='/') Search
-						li 
-							a(href='/') About
-  
+					li
+						a(href='/') Home
+					li(class='active')
+						a(href='/search') Search
+					li
+						a(href='/about') About
+					li
+						a(href='/donate') Donate
+					li
+						a(href='/gettheapp') Get the app
+
+
+
 	div(class='container') 
 		h1= title
-		table(class='table table-striped table-hover')
-			each val in items
-				tr
-					//- img(src=val.picture alt='')
-					td 
-						a(href=val.url target='_blank' style='color:lightblue')=val.item
-					td
-						div(class='itemthumb')
-							img(src=val.thumbnail)						
-					td
-						p
-							=val.description
-						p(class='item_details')
-							//--processedDate = new Date( val.postdata ).toDateString();
-							//-=processedDate
-							//-#{moment(val.postdata).format("dddd Do MMMM YYYY HH:mm")}
-							#{moment(val.postdata).fromNow()}
-							&nbsp;&nbsp;
-							#{moment(val.postdata).format("DD-MM-YYYY HH:mm")}
-							&nbsp;&nbsp;-&nbsp;&nbsp; 
-							=val.googleAddress
-							
-					td
-						p(class='item_details' style='font-size:100%')
-							=val.freecycleGroup
-					//-td
-						//-=val.postdata
+		div
+			button(id='btn_fluid') Fluid View
+			button(id='btn_table') Table View
 
 
-	p(style='width:300px;margin:0 auto;text-align:center') freescraper © 2017 Darren Dignam
+
+		div(id='fs_grid')
+			div(class='row')
+				each val in items
+					div(class='col-sm-4')
+						div(class='panel panel-primary')
+							div(class='panel-heading')
+								a(href=val.url target='_blank' class='panel_link')=val.item
+							div(class='panel-body')
+								div(class='img_grid container-fluid text-center')
+									if val.thumbnail
+										img(src='#{val.thumbnail}')
+								div(class='item_description') #{val.description}
+									
+							div(class='panel-footer')
+								p(class='item_details')
+									&nbsp;#{moment(val.postdata).fromNow()} &nbsp;-&nbsp; #{moment(val.postdata).format("DD-MM-YYYY HH:mm")} &nbsp;-&nbsp; #{val.googleAddress}
+	
+		div(id='fs_table' style='display:none')
+			table(class='table table-striped table-hover')
+				each val in items
+					tr
+						//- img(src=val.picture alt='')
+						td 
+							a(href=val.url target='_blank' style='color:lightblue')=val.item
+						td
+							div(class='itemthumb')
+								img(src=val.thumbnail)						
+						td
+							p
+								=val.description
+							p(class='item_details')
+								&nbsp;#{moment(val.postdata).fromNow()} &nbsp;-&nbsp; #{moment(val.postdata).format("DD-MM-YYYY HH:mm")} &nbsp;-&nbsp; #{val.googleAddress}
+								
+						td
+							p(class='item_details' style='font-size:100%')
+								=val.freecycleGroup
+						//-td
+							//-=val.postdata
+
+
+	footer(class='container-fluid text-center')
+		p freescraper © 2017 Darren Dignam

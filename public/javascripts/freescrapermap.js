@@ -17,7 +17,7 @@ $(function() {
             //$("body").append(group_object.title);
             var myLatLng = {lat: group_object.locationGPS[1], lng: group_object.locationGPS[0]};
             var infowindow = new google.maps.InfoWindow({
-          		content: '<span class="map_infowindow" ><a href="/api/group/'+ group_object.title +'" target="_blank">'+ group_object.title +'</a></span>'
+          		content: '<span class="map_infowindow" ><a href="/api/group/'+ group_object.title +'">'+ group_object.title +'</a></span>'
 	        });
 			var marker = new google.maps.Marker({
 				position: myLatLng,
@@ -47,11 +47,11 @@ $(function() {
         map.setCenter(pos);
         map.setZoom(10);
       }, function() {
-        handleLocationError(true, infoWindowLocation, map.getCenter());
+        //handleLocationError(true, infoWindowLocation, map.getCenter());
       });
     } else {
       // Browser doesn't support Geolocation
-      handleLocationError(false, infoWindowLocation, map.getCenter());
+      //handleLocationError(false, infoWindowLocation, map.getCenter());
     }
 
 

@@ -1,6 +1,4 @@
-//- Freescraper main worker displays results :)
-
-extends ../layout
+extends layout
 
 block content
 
@@ -24,18 +22,11 @@ block content
 						a(href='/donate') Donate
 					li
 						a(href='/gettheapp') Get the app
-  
-	div(class='container') 
-		h1= title
-		table
-			each val in items
-				tr
-					
-					//- img(src=val.picture alt='')
-					td 
-						a(href=val.url target='_blank' style='color:lightblue')=val.item
-					td
-						=val.freecycleGroup
-					td
-						=val.distanceNear
-						mile(s)
+
+	div(class='container')
+		<h1> freescraper search
+	div(class='container')
+		include search_view
+
+	footer(class='container-fluid text-center')
+		p freescraper © 2017 Darren Dignam

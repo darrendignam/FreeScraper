@@ -2,21 +2,17 @@ doctype html
 html
 	head
 		title= title
-		//-meta(name="viewport" content="width=device-width, initial-scale=1")
-		//- link( rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/slate/bootstrap.min.css' )
+		meta(name="viewport" content="width=device-width, initial-scale=1")
 
 		link( rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/bootstrap.min.css' )
 		link( rel='stylesheet' href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/dot-luv/jquery-ui.css' )
+		link(rel='stylesheet', href='/stylesheets/style.css')
 
 		script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
 		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js')
-		//-script(src='https://maps.google.com/maps/api/js?sensor=true')
 		script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCbNOc3rnK_fgA8GAlriIXg9lJZHu9DKyM&sensor=true')
-		
-
-		//-script(src='/javascripts/gmaps.js')
-
+		script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
 		script(src='/javascripts/freescraper.js')
-		link(rel='stylesheet', href='/stylesheets/style.css')
+
 	body
 		block content

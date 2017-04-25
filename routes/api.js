@@ -99,9 +99,6 @@ router.get('/all', function(req, res) {
               }     
     });
 });
-
-
-
 router.get('/group/:groupString/:searchString', function(req, res) {
   mongoose.model('Item')
     .find({ 
@@ -125,7 +122,7 @@ router.get('/group/:groupString/:searchString', function(req, res) {
                             //HTML response will render the index.ejs file in the views/items folder. We are also setting "items" to be an accessible variable in our view
                           html: function(){
                              res.render('items/index', {
-                                    title: 'Search: '+req.params.searchString+ ' in '+req.params.groupString,
+                                    title: 'Search: "'+req.params.searchString+ '" in '+req.params.groupString,
                                     "items" : items,
                                     moment: moment
                                 });
@@ -141,7 +138,7 @@ router.get('/group/:groupString/:searchString', function(req, res) {
 
 router.get('/group/:groupString', function(req, res) {
   mongoose.model('Item')
-    .find({ freecycleGroup: { $eq: req.params.groupString } })
+    .find({ freecycleGroup: { $regex : new RegExp( req.params.groupString, "i") } })
     .sort({postdata: -1})
     .limit(100)
     .exec( function (err, items) {
@@ -282,7 +279,7 @@ router.get('/near/:lng/:lat', function(req, res) {
                              //        moment: moment
                              //    });
                                 res.render('items/mapsearch', {
-                                    title: 'Location Search: '+req.params.searchString,
+                                    title: 'Everything near here',
                                     the_lat : req.params.lat,
                                     the_lng : req.params.lng,
                                     the_search : req.params.searchString,
@@ -333,9 +330,45 @@ router.get('/distance/:lng/:lat', function(req, res) {
               }     
        });
 });
+//this route is for jquery autocomplete module
+router.get('/groups/autocomplete', function(req, res) {
+  mongoose.model('FreeGroup')
+    .find({ "title" : { $regex : new RegExp( req.query.term, "i") } })
+    .exec(function (err, groups) {
+      //console.log("%j", groups);
+              if (err) {
+                  return console.error(err);
+              } else {
+                        //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+
+                 //res.json( items );
+
+                      res.format({
+                            //HTML response will render the index.ejs file in the views/items folder. We are also setting "items" to be an accessible variable in our view
+                          html: function(){
+                             res.render('items/groups', {
+                                    title: 'All groups',
+                                    "groups" : groups,
+                                    moment: moment
+                                });
+                          },
+                          // JSON response will show all blobs in JSON format
+                         json: function(){
+                              //{"id":"Falco eleonorae","label":"Eleonora's Falcon","value":"Eleonora's Falcon"}
+                              var autocomplete_list = [];
+                              for(var i = 0; i < groups.length; i++){
+                                  autocomplete_list.push({"id": groups[i].title, "label":groups[i].title  ,"value":groups[i].title, "url":groups[i].url });
+                              }
+                              res.json(autocomplete_list);
+
+                              //res.json(groups);
+                         }
+                      });
+              }     
+    });
+});
 
 router.get('/groups', function(req, res) {
-  
   mongoose.model('FreeGroup')
     .find({})
     .exec(function (err, groups) {
@@ -363,7 +396,6 @@ router.get('/groups', function(req, res) {
                       });
               }     
     });
-
 });
 
 module.exports = router;

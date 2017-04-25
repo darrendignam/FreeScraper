@@ -4,15 +4,26 @@ extends ../layout
 
 block content
 
-	div(class='navbar navbar-default navbar-fixed-top')
-		div(class='container')
+	nav(class='navbar navbar-inverse navbar-fixed-top')
+		div(class='container-fluid')
 			div(class='navbar-header')
-				a(href='/' class='navbar-brand') FreeScraper
+				button(type='button' class='navbar-toggle' data-toggle='collapse' data-target='#mynavbar')
+					span(class='icon-bar')
+					span(class='icon-bar')
+					span(class='icon-bar')
+				a(class='navbar-brand' href='/') freescraper 
+			div(class='collapse navbar-collapse' id='mynavbar')
 				ul(class='nav navbar-nav')
-						li 
-							a(href='/') Search
-						li 
-							a(href='/') About
+					li
+						a(href='/') Home
+					li(class='active')
+						a(href='/search') Search
+					li
+						a(href='/about') About
+					li
+						a(href='/donate') Donate
+					li
+						a(href='/gettheapp') Get the app
   
 	div(class='container') 
 		h1= title
