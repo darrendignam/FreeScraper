@@ -121,6 +121,11 @@ $(function() {
 			}
 		});
 	});
+  $("#input_search_term_location").keypress(function(e) {
+      if(e.which == 13) {
+      		$('#button_search_location').click();
+      }
+  });		
 
 	//helpers for the map search page
 	if(the_lat && the_lng){
@@ -134,15 +139,15 @@ $(function() {
 		var search_string = $('#input_search_term_local').val();
 		window.location.href = '/api/near/'+this_lng+'/'+this_lat+'/10000/'+ search_string;
 	});
-  $("#input_search_term_local").keypress(function(e) {
-      if(e.which == 13) {
-		var this_lnglat = $('#input_search_address_locked').val().split(',');
-		var this_lng = this_lnglat[1];//todo lat and lng are getting out of hand, review and fix all the refs!:)
-		var this_lat = this_lnglat[0];
-		var search_string = $('#input_search_term_local').val();
-		window.location.href = '/api/near/'+this_lng+'/'+this_lat+'/10000/'+ search_string;
-      }
-  });	
+	$("#input_search_term_local").keypress(function(e) {
+	      if(e.which == 13) {
+			var this_lnglat = $('#input_search_address_locked').val().split(',');
+			var this_lng = this_lnglat[1];//todo lat and lng are getting out of hand, review and fix all the refs!:)
+			var this_lat = this_lnglat[0];
+			var search_string = $('#input_search_term_local').val();
+			window.location.href = '/api/near/'+this_lng+'/'+this_lat+'/10000/'+ search_string;
+	      }
+	});	
 
 });//end page loaded
 

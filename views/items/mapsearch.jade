@@ -65,26 +65,20 @@ block content
 			div(class='panel-heading') Table results:
 				
 			div(class='panel-body')
-				div
-					table(class='table table-striped table-hover')
-						each val in items
-							tr
-								//- img(src=val.picture alt='')
-								td 
-									a(href=val.url target='_blank' style='color:lightblue')=val.item
-								td
-									div(class='itemthumb')
-										img(src=val.thumbnail)						
-								td
-									p
-										=val.description
-									p(class='item_details')
-										&nbsp;#{moment(val.postdata).fromNow()} &nbsp;-&nbsp; #{moment(val.postdata).format("DD-MM-YYYY HH:mm")} &nbsp;-&nbsp; #{val.googleAddress}
+				div(class='row')
+					each val in items
+						div(class='col-sm-4')
+							div(class='panel panel-primary')
+								div(class='panel-heading')
+									a(href=val.url target='_blank' class='panel_link')=val.item
+								div(class='panel-body')
+									div(class='img_grid container-fluid text-center')
+										if val.thumbnail
+											img(src='#{val.thumbnail}')
+									div(class='item_description') #{val.description}
 										
-								td
-									p(class='item_details' style='font-size:100%')
-										=val.freecycleGroup
-					
+								div(class='panel-footer')
+									p(class='item_details') &nbsp;#{moment(val.postdata).fromNow()} &nbsp;-&nbsp; #{moment(val.postdata).format("DD-MM-YYYY HH:mm")} &nbsp;-&nbsp; #{val.googleAddress}
 
 		
 
