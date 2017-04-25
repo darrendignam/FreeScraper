@@ -48,6 +48,18 @@ router.get('/search', function(req, res) {
   res.render('search_freescraper', { title: 'FreeScraper' });
 });
 
+router.get('/about', function(req, res) {
+  res.render('about', { title: 'about' });
+});
+
+router.get('/donate', function(req, res) {
+  res.render('about', { title: 'donate' });
+});
+
+router.get('/gettheapp', function(req, res) {
+  res.render('about', { title: 'The App' });
+});
+
 getClientAddress = function (req) {
         return (req.headers['x-forwarded-for'] || '').split(',')[0]  || req.connection.remoteAddress;
 };

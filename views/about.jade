@@ -1,0 +1,52 @@
+extends layout
+
+block content
+
+	nav(class='navbar navbar-inverse navbar-fixed-top')
+		div(class='container-fluid')
+			div(class='navbar-header')
+				button(type='button' class='navbar-toggle' data-toggle='collapse' data-target='#mynavbar')
+					span(class='icon-bar')
+					span(class='icon-bar')
+					span(class='icon-bar')
+				a(class='navbar-brand' href='/') freescraper 
+			div(class='collapse navbar-collapse' id='mynavbar')
+				ul(class='nav navbar-nav')
+					li
+						a(href='/') Home
+					li
+						a(href='/search') Search
+					li(class='active')
+						a(href='/about') About
+					li
+						a(href='/donate') Donate
+					li
+						a(href='/gettheapp') Get the app
+
+
+	div(class='container')
+		h1 About the freescraper project (#{title})
+		p An open source project aiming to make freecycle easier to use, and better for everyone. Quickly see the things listed near you, or do a more detailed search.
+
+
+	div(class='container')
+		div(class='panel panel-primary')
+			div(class='panel-heading') About
+				
+			div(class='panel-body')
+				p This project is still in development, with more features coming every day. There is an iPhone app in final testing, and Android coming soon too.
+				p The app searches freecycle and stores the results into a database. It also tries to get a GPS point for the item by analysing the item when it scans it. What this allows is for super quick localised search for items near you without having to go through the old and clunky freecycle site. I made this tool to help me find things. Once you find the thing you are after - you get taked to the relevent place in the freecycle website.
+				p This site is still undergoing development, and there is some features in the works, like clearing out old, and 'dead' items that the original poster has taken down.
+				p If you have any ideas, suggestions, or bug reports please use the github pages to contact me. Or better yet - add your own features and send me a pull request.
+				p This is an open source project. The application is written in nodejs mongodb and PHP. With iOS and Android coming soon.
+				p
+					a(href='https://github.com/darrendignam/FreeScraper' target='_blank') FreeScraper on GitHub
+					
+			div(class='panel-footer')
+				p(class='item_details') Please send me any feedback via the github page.
+
+	div(class='container' style='margin-top:50px')
+		include search_view.jade
+
+	div(class='container')
+		p(style='width:300px;margin:0 auto;text-align:center') © 2017 Darren Dignam
