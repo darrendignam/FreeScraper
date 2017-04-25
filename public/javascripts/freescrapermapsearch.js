@@ -48,6 +48,7 @@ $(function() {
 
     });
 
+  //might be useful to have a moveend here too, as a drifting map does not update
   google.maps.event.addListener(map, 'dragend', function () {
       $('#input_search_address_locked').val( this.getCenter().lat()+','+this.getCenter().lng() );
 
@@ -67,7 +68,7 @@ $(function() {
           window.location.href = '/api/group/'+$("#input_search_group_picker").val() +'/'+$("#input_search_term").val()  ;
       }
   });
-  
+
 });
 
 function closeAllMarkers(){
