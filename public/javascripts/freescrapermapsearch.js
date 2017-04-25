@@ -1,7 +1,7 @@
 var map;
 var map_markers = [];
 var map_infowindows = [];
-// var infoWindowLocation;
+var infoWindowLocation;
 $(function() { 
 	//alert('MAP!')
 	//map = new GMaps({ div: '#map_container', lat: 52.944236,  lag: -1.378722 }); 
@@ -9,7 +9,10 @@ $(function() {
     	center: {lat: 54.196248, lng: -4.477640}, 
     	zoom: 6
 	});
-	// infoWindowLocation = new google.maps.InfoWindow;
+	infoWindowLocation = new google.maps.InfoWindow;
+  infoWindowLocation.setPosition({ lat: the_lat, lng: the_lng });
+  infoWindowLocation.setContent('<span class="map_infowindow" >"'+the_search+'" Near Here</span>');
+  infoWindowLocation.open(map);
 
    	//go get the group pages...
    	$.getJSON(window.location.href, function(result){
