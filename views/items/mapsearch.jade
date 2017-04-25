@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+
+	div(class='navbar navbar-default navbar-fixed-top')
+		div(class='container')
+			div(class='navbar-header')
+				a(href='/' class='navbar-brand') FreeScraper
+				ul(class='nav navbar-nav')
+						li 
+							a(href='/') Search
+						li 
+							a(href='/') About
+
+	div(class='container')
+		h1= title
+		p Welcome to FreeScraper - A handy utility to help search through freecycle listings
+		div(id='map_container' style='width:100%;height:700px')
+		
+		p You can find the groups near you and see whats being offered. Or you can search for items near you regardless of the group
+	script.
+		var search_address = window.location.href;
+		var the_lat = #{the_lat}
+		var the_lng = #{the_lng}
+
+	script(src='/javascripts/freescrapermapsearch.js')
+	p(style='width:300px;margin:0 auto;text-align:center') © 2017 Darren Dignam

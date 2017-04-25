@@ -39,6 +39,7 @@ var router = express.Router();
 
 var moment = require('moment');
 
+
 // var request = require('request');  //lets us get the data from a URL - freecycle in this case
 // var cheerio = require('cheerio');  //Makes accessing the data from the requests easier, jQuery-like notation
 // var fs = require('fs');
@@ -208,6 +209,47 @@ router.get('/search/:searchString', function(req, res) {
 });
 
 
+router.get('/near/:lng/:lat/:distance/:searchString', function(req, res) {
+  mongoose.model('Item')
+    .find({
+      $or : [
+           {"item" : { $regex : new RegExp( req.params.searchString, "i") } },
+           {"description" : { $regex : new RegExp( req.params.searchString, "i") } }
+        ],      
+        'locationGPS' : {$near: {$geometry: {type: "Point" ,coordinates: [ req.params.lng , req.params.lat ]},$maxDistance: req.params.distance,$minDistance: 0}}
+    })
+    .sort({postdata: -1})
+    .limit(100)
+    .exec(function (err, items) {
+  //mongoose.model('Item').find({'locationGPS' : {$near: {$geometry: {type: "Point" ,coordinates: [ '-0.055525600' , '51.5599178' ]},$maxDistance: 10000,$minDistance: 0}}} , function (err, items) {
+              if (err) {
+                  return console.error(err);
+              } else {
+                        //respond to both HTML and JSON. JSON responses require 'Accept: application/json;' in the Request Header
+
+                 //res.json( items );
+
+                      res.format({
+                            //HTML response will render the index.ejs file in the views/items folder. We are also setting "items" to be an accessible variable in our view
+                          html: function(){
+                             res.render('items/mapsearch', {
+                                    title: 'Location Search: '+req.params.searchString,
+                                    the_lat : req.params.lat,
+                                    the_lng : req.params.lng,
+                                    "items" : items,
+                                    moment: moment
+                                });
+                          },
+                          // JSON response will show all blobs in JSON format
+                         json: function(){
+                              res.json(items);
+                         }
+                      });
+              }     
+       });
+});
+
+
 router.get('/near/:lng/:lat', function(req, res) {
 //router.get('/near', function(req, res) {
   //LOCALHOST:3000/api/LAT/LNG    //is what the above should match
@@ -216,7 +258,9 @@ router.get('/near/:lng/:lat', function(req, res) {
 // { latlngADDR : {$near: {$geometry: {type: "Point" ,coordinates: [ <longitude> , <latitude> ]},$maxDistance: <distance in meters>,$minDistance: <distance in meters>     }   }}
 //51.5599178,-0.055525600000009945 = E5 8BQ
   mongoose.model('Item')
-    .find({'locationGPS' : {$near: {$geometry: {type: "Point" ,coordinates: [ req.params.lng , req.params.lat ]},$maxDistance: 10000,$minDistance: 0}}})
+    .find({
+        'locationGPS' : {$near: {$geometry: {type: "Point" ,coordinates: [ req.params.lng , req.params.lat ]},$maxDistance: 10000,$minDistance: 0}}
+    })
     .sort({postdata: -1})
     .limit(100)
     .exec(function (err, items) {
