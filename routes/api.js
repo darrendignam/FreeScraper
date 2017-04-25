@@ -276,8 +276,16 @@ router.get('/near/:lng/:lat', function(req, res) {
                       res.format({
                             //HTML response will render the index.ejs file in the views/items folder. We are also setting "items" to be an accessible variable in our view
                           html: function(){
-                             res.render('items/index', {
-                                    title: 'All items',
+                             // res.render('items/index', {
+                             //        title: 'All items',
+                             //        "items" : items,
+                             //        moment: moment
+                             //    });
+                                res.render('items/mapsearch', {
+                                    title: 'Location Search: '+req.params.searchString,
+                                    the_lat : req.params.lat,
+                                    the_lng : req.params.lng,
+                                    the_search : req.params.searchString,
                                     "items" : items,
                                     moment: moment
                                 });
