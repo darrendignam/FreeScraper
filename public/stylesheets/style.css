@@ -41,7 +41,8 @@ and (max-device-width : 480px) {
         width:100% !important;
     }
     body{
-        padding:1px !important;
+        padding-left:1px !important;
+        padding-right:1px !important;
     }
 }
 
