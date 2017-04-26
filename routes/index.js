@@ -48,13 +48,13 @@ var FreeGroup = require('../models/freegroup');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress(req));
-
+  //console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress(req));
+  
   res.render('index', { title: 'FreeScraper' });
 });
 
 router.get('/search', function(req, res) {
-  // console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress(req));
+  //console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress(req));
   res.render('search_freescraper', { title: 'FreeScraper' });
 });
 
@@ -125,10 +125,22 @@ router.get('/latest', function(req, res) {
 
 
 getClientAddress = function (req) {
-    var tmpStr= (req.headers['x-forwarded-for'] || '').split(',')[0]  || req.connection.remoteAddress;
-    //mongoose.model('Item').add({ipaddress: tmpStr});
+    var tmp_IP   = (req.headers['x-forwarded-for'] || '').split(',')[0]  || req.connection.remoteAddress;
+    var tmp_url  = req.protocol + '://' + req.get('host') + req.originalUrl;
+    var user_instance = new ipaddress({ 
+        ipaddress: tmp_IP,
+        route: tmp_url 
+    });
 
-    return tmpStr;
+    user_instance.save(function(err) {
+      if(err) {
+        console.log(err);  // handle errors!
+      } else {
+        console.log("saving ip ...");
+      }
+    });
+
+    return tmp_IP +' @ '+ tmp_url;
 };
 
 module.exports = router;

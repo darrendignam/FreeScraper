@@ -66,10 +66,12 @@ var FreeGroup = require('../models/freegroup');
 
 /* GET home page. */
 router.get('/', function(req, res) {
+  getClientAddress(req);
   res.render('index', { title: 'FreeScraper - freecycle scanner written in NodeJS' });
 });
 
 router.get('/all', function(req, res) {
+  getClientAddress(req);
   mongoose.model('Item')
     .find({})
     .limit(100)
@@ -100,6 +102,7 @@ router.get('/all', function(req, res) {
     });
 });
 router.get('/group/:groupString/:searchString', function(req, res) {
+  getClientAddress(req);
   mongoose.model('Item')
     .find({ 
       "freecycleGroup": { $regex : new RegExp( req.params.groupString, "i") }, 
@@ -137,6 +140,7 @@ router.get('/group/:groupString/:searchString', function(req, res) {
 });
 
 router.get('/group/:groupString', function(req, res) {
+  getClientAddress(req);
   mongoose.model('Item')
     .find({ freecycleGroup: { $regex : new RegExp( req.params.groupString, "i") } })
     .sort({postdata: -1})
@@ -168,6 +172,7 @@ router.get('/group/:groupString', function(req, res) {
 });
 
 router.get('/search/:searchString', function(req, res) {
+  getClientAddress(req);
   mongoose.model('Item')
     .find( { 
         $or : [
@@ -207,6 +212,7 @@ router.get('/search/:searchString', function(req, res) {
 
 
 router.get('/near/:lng/:lat/:distance/:searchString', function(req, res) {
+  getClientAddress(req);
   mongoose.model('Item')
     .find({
       $or : [
@@ -249,6 +255,7 @@ router.get('/near/:lng/:lat/:distance/:searchString', function(req, res) {
 
 
 router.get('/near/:lng/:lat', function(req, res) {
+  getClientAddress(req);
 //router.get('/near', function(req, res) {
   //LOCALHOST:3000/api/LAT/LNG    //is what the above should match
   //https://expressjs.com/en/guide/routing.html
@@ -305,6 +312,7 @@ router.get('/near/:lng/:lat', function(req, res) {
 
 
 router.get('/distance/:lng/:lat', function(req, res) {
+  getClientAddress(req);
   mongoose.model('Item').aggregate([{ "$geoNear": {"near": {"type": "Point","coordinates": [ req.params.lng , req.params.lat ]},"maxDistance": 5000 * 1609,"spherical": true,"distanceField": "distance","distanceMultiplier": 0.000621371}}], function (err, items) {
               if (err) {
                   return console.error(err);
@@ -332,6 +340,7 @@ router.get('/distance/:lng/:lat', function(req, res) {
 });
 //this route is for jquery autocomplete module
 router.get('/groups/autocomplete', function(req, res) {
+  getClientAddress(req);
   mongoose.model('FreeGroup')
     .find({ "title" : { $regex : new RegExp( req.query.term, "i") } })
     .exec(function (err, groups) {
@@ -369,6 +378,7 @@ router.get('/groups/autocomplete', function(req, res) {
 });
 
 router.get('/groups', function(req, res) {
+  getClientAddress(req);
   mongoose.model('FreeGroup')
     .find({})
     .exec(function (err, groups) {
@@ -397,5 +407,24 @@ router.get('/groups', function(req, res) {
               }     
     });
 });
+
+getClientAddress = function (req) {
+    var tmp_IP   = (req.headers['x-forwarded-for'] || '').split(',')[0]  || req.connection.remoteAddress;
+    var tmp_url  = req.protocol + '://' + req.get('host') + req.originalUrl;
+    var user_instance = new ipaddress({ 
+        ipaddress: tmp_IP,
+        route: tmp_url 
+    });
+
+    user_instance.save(function(err) {
+      if(err) {
+        console.log(err);  // handle errors!
+      } else {
+        console.log("saving ip ...");
+      }
+    });
+
+    return tmp_IP +' @ '+ tmp_url;
+};
 
 module.exports = router;
