@@ -41,6 +41,8 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose'); 
 var Schema = mongoose.Schema;
 
+var ipaddress = require('./models/ipaddress');
+
 mongoose.connect('mongodb://heroku_jt8w96fw_user:thedoctorwashere1900@ds163010.mlab.com:63010/heroku_jt8w96fw');
 // { user: "heroku_jt8w96fw", account: "heroku_jt8w96fw" }
 

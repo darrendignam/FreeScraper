@@ -28,8 +28,36 @@ block content
 		h1= title
 		p An open source project aiming to make freecycle easier to use, and better for everyone. Quickly see the things listed near you, or do a more detailed search.
 
+
+
+
 	div(class='container' style='margin-top:50px')
 		include search_view.jade
+
+	div(class='container')
+		div(class='row')
+			div(class='col-sm-6')
+				div(class='panel panel-primary')
+					div(class='panel-heading') Latest items on offer
+						
+					div(class='panel-body')
+						div
+							a(href='/latest') freescraper latest scan
+							
+					div(class='panel-footer')
+						p(class='item_details') Shows everything on offer right now across the country.
+						
+			div(class='col-sm-6')
+				div(class='panel panel-primary')
+					div(class='panel-heading') All the groups being monitored
+						
+					div(class='panel-body')
+						div
+							a(href='/groups') freescraper all groups
+							
+					div(class='panel-footer')
+						p(class='item_details') Choose a group and see what's on offer in that area.
+
 
 	div(class='panel panel-primary')
 		div(class='panel-heading') Find a group near you
@@ -41,8 +69,24 @@ block content
 		div(class='panel-footer')
 			p(class='item_details') Choose a group and see what's being offered.
 
-		
-		//p You can find the groups near you and see whats being offered. Or you can search for items near you regardless of the group
+
+div(class='row')
+				each val in items
+					div(class='col-sm-4')
+						div(class='panel panel-primary')
+							div(class='panel-heading')
+								a(href=val.url target='_blank' class='panel_link')=val.item
+							div(class='panel-body')
+								div(class='img_grid container-fluid text-center')
+									if val.thumbnail
+										img(src='#{val.thumbnail}')
+								div(class='item_description') #{val.description}
+									
+							div(class='panel-footer')
+								p(class='item_details')
+									&nbsp;#{moment(val.postdata).fromNow()} &nbsp;-&nbsp; #{moment(val.postdata).format("DD-MM-YYYY HH:mm")} &nbsp;-&nbsp; #{val.googleAddress}
+
+
 
 	script(src='/javascripts/freescrapermap.js')
 

@@ -35,6 +35,16 @@
 
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose'); 
+var Schema = mongoose.Schema;
+var moment = require('moment');
+
+//datamining
+var ipaddress = require('../models/ipaddress');
+
+var Item = require('../models/item');
+var FreeGroup = require('../models/freegroup');
+
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -56,12 +66,69 @@ router.get('/donate', function(req, res) {
   res.render('about', { title: 'donate' });
 });
 
-router.get('/gettheapp', function(req, res) {
+router.get('/gettheapp', function(req, res) { 
   res.render('about', { title: 'The App' });
 });
 
+router.get('/groups', function(req, res) { 
+  mongoose.model('FreeGroup')
+    .find({})
+    .sort({title: 1})
+    .exec(function (err, groups) {
+      //console.log("%j", groups);
+              if (err) {
+                  return console.error(err);
+              } else {
+                 res.render('group_list', {
+                        title: 'All groups',
+                        "groups" : groups//,
+                        //moment: moment
+                  });
+              }     
+    });
+});
+router.get('/group/:groupString', function(req, res) { 
+  mongoose.model('Item')
+    .find({ freecycleGroup: { $regex : new RegExp( req.params.groupString, "i") } })
+    .sort({postdata: -1})
+    .limit(100)
+    .exec( function (err, items) {
+              if (err) {
+                  return console.error(err);
+              } else {
+                 res.render('items/index', {
+                        title: 'Group: '+req.params.groupString,
+                        "items" : items,
+                        moment: moment
+                  });
+              }     
+       });
+});
+
+router.get('/latest', function(req, res) { 
+  mongoose.model('Item')
+    .find({})
+    .limit(100)
+    .sort({postdata: -1})
+    .exec(function (err, items) {
+        if (err) {
+            return console.error(err);
+        } else {
+             res.render('items/index', {
+                    title: 'All items',
+                    "items" : items,
+                    moment: moment
+              });
+        }     
+    });
+});
+
+
 getClientAddress = function (req) {
-        return (req.headers['x-forwarded-for'] || '').split(',')[0]  || req.connection.remoteAddress;
+    var tmpStr= (req.headers['x-forwarded-for'] || '').split(',')[0]  || req.connection.remoteAddress;
+    //mongoose.model('Item').add({ipaddress: tmpStr});
+
+    return tmpStr;
 };
 
 module.exports = router;
