@@ -37,9 +37,9 @@ block content
 			
 		div(class='panel-body')
 			div
-				ul
+				ul(class='list-group')
 					each val in groups
-						li(style='width:25%;float:left;') 
+						li(class='list-group-item fs_group_list') 
 							a(href='/group/#{val.title}') #{val.title}
 
 

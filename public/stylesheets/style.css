@@ -37,6 +37,12 @@
 and (min-device-width : 320px) 
 and (max-device-width : 480px) {
 /* Styles */
+    .fs_group_list{
+        width:100% !important;
+    }
+    body{
+        padding:1px;
+    }
 }
 
 /* iPads (portrait and landscape) ----------- */
@@ -114,10 +120,13 @@ a {
     color:#2b3e50;
 }
 
-
 button{
     color:#000;
     padding:10px;
     margin:10px 0;
+}
 
+.fs_group_list{
+    width:25%;
+    float:left;
 }
