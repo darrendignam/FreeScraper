@@ -68,25 +68,7 @@ block content
 				
 		div(class='panel-footer')
 			p(class='item_details') Choose a group and see what's being offered.
-
-
-div(class='row')
-				each val in items
-					div(class='col-sm-4')
-						div(class='panel panel-primary')
-							div(class='panel-heading')
-								a(href=val.url target='_blank' class='panel_link')=val.item
-							div(class='panel-body')
-								div(class='img_grid container-fluid text-center')
-									if val.thumbnail
-										img(src='#{val.thumbnail}')
-								div(class='item_description') #{val.description}
-									
-							div(class='panel-footer')
-								p(class='item_details')
-									&nbsp;#{moment(val.postdata).fromNow()} &nbsp;-&nbsp; #{moment(val.postdata).format("DD-MM-YYYY HH:mm")} &nbsp;-&nbsp; #{val.googleAddress}
-
-
+			
 
 	script(src='/javascripts/freescrapermap.js')
 

@@ -130,10 +130,16 @@ $(function() {
   });		
 
 	//helpers for the map search page
-	if(the_lat && the_lng){
-		$('#input_search_address_locked').val(the_lat+','+the_lng);
-		$('#input_search_term_local').val( the_search );
+	try {
+		if(the_lat && the_lng){
+			$('#input_search_address_locked').val(the_lat+','+the_lng);
+			$('#input_search_term_local').val( the_search );
+		}
 	}
+	catch(err) {
+	    console.log('No map vars');
+	}
+
 	$('#button_search_local').click(function(){
 		var this_lnglat = $('#input_search_address_locked').val().split(',');
 		var this_lng = this_lnglat[1];//todo lat and lng are getting out of hand, review and fix all the refs!:)
