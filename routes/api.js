@@ -49,6 +49,7 @@ var Schema = mongoose.Schema;
 
 var Item = require('../models/item');
 var FreeGroup = require('../models/freegroup');
+var ipaddress= require('../models/ipaddress');
 
 // var startdate = new Date('2014-05-18T20:00:00.000Z');
 // var enddate = Date();  // new Date('2014-05-19T20:00:00.000Z');
