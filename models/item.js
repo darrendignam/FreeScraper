@@ -17,6 +17,8 @@ var itemSchema = new mongoose.Schema({
   scrapedDate:{ type: Date, default: Date.now },
   updatedDate:{ type: Date, default: Date.now },
   postdata:Date,  /*the extracted listing date*/
+  source:String,
+  active:String,
   version:Number
 });
 

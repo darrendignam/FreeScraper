@@ -74,7 +74,7 @@ router.get('/', function(req, res) {
 router.get('/all', function(req, res) {
   getClientAddress(req);
   mongoose.model('Item')
-    .find({})
+    .find({"active":"true"})
     .limit(100)
     .sort({postdata: -1})
     .exec(function (err, items) {
@@ -107,6 +107,7 @@ router.get('/group/:groupString/:searchString', function(req, res) {
   mongoose.model('Item')
     .find({ 
       "freecycleGroup": { $regex : new RegExp( req.params.groupString, "i") }, 
+      "active":"true",
       $or : [
            {"item" : { $regex : new RegExp( req.params.searchString, "i") } },
            {"description" : { $regex : new RegExp( req.params.searchString, "i") } }
@@ -143,7 +144,10 @@ router.get('/group/:groupString/:searchString', function(req, res) {
 router.get('/group/:groupString', function(req, res) {
   getClientAddress(req);
   mongoose.model('Item')
-    .find({ freecycleGroup: { $regex : new RegExp( req.params.groupString, "i") } })
+    .find({ 
+        "active":"true",
+        freecycleGroup: { $regex : new RegExp( req.params.groupString, "i") } 
+    })
     .sort({postdata: -1})
     .limit(100)
     .exec( function (err, items) {
@@ -175,7 +179,8 @@ router.get('/group/:groupString', function(req, res) {
 router.get('/search/:searchString', function(req, res) {
   getClientAddress(req);
   mongoose.model('Item')
-    .find( { 
+    .find({
+        "active":"true",
         $or : [
            {"item" : { $regex : new RegExp( req.params.searchString, "i") } },
            {"description" : { $regex : new RegExp( req.params.searchString, "i") } }
@@ -216,11 +221,12 @@ router.get('/near/:lng/:lat/:distance/:searchString', function(req, res) {
   getClientAddress(req);
   mongoose.model('Item')
     .find({
+      "active":"true",
       $or : [
            {"item" : { $regex : new RegExp( req.params.searchString, "i") } },
            {"description" : { $regex : new RegExp( req.params.searchString, "i") } }
         ],      
-        'locationGPS' : {$near: {$geometry: {type: "Point" ,coordinates: [ req.params.lng , req.params.lat ]},$maxDistance: req.params.distance,$minDistance: 0}}
+        "locationGPS" : {$near: {$geometry: {type: "Point" ,coordinates: [ req.params.lng , req.params.lat ]},$maxDistance: req.params.distance,$minDistance: 0}}
     })
     .sort({postdata: -1})
     .limit(100)
@@ -265,7 +271,8 @@ router.get('/near/:lng/:lat', function(req, res) {
 //51.5599178,-0.055525600000009945 = E5 8BQ
   mongoose.model('Item')
     .find({
-        'locationGPS' : {$near: {$geometry: {type: "Point" ,coordinates: [ req.params.lng , req.params.lat ]},$maxDistance: 10000,$minDistance: 0}}
+        "active":"true",
+        "locationGPS" : {$near: {$geometry: {type: "Point" ,coordinates: [ req.params.lng , req.params.lat ]},$maxDistance: 10000,$minDistance: 0}}
     })
     .sort({postdata: -1})
     .limit(100)
@@ -311,7 +318,7 @@ router.get('/near/:lng/:lat', function(req, res) {
 
 
 
-
+//hmmmmm....:)
 router.get('/distance/:lng/:lat', function(req, res) {
   getClientAddress(req);
   mongoose.model('Item').aggregate([{ "$geoNear": {"near": {"type": "Point","coordinates": [ req.params.lng , req.params.lat ]},"maxDistance": 5000 * 1609,"spherical": true,"distanceField": "distance","distanceMultiplier": 0.000621371}}], function (err, items) {
@@ -381,7 +388,7 @@ router.get('/groups/autocomplete', function(req, res) {
 router.get('/groups', function(req, res) {
   getClientAddress(req);
   mongoose.model('FreeGroup')
-    .find({})
+    .find({"active":"true"})
     .exec(function (err, groups) {
       //console.log("%j", groups);
               if (err) {

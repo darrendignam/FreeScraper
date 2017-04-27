@@ -16,6 +16,8 @@ var freeItemSchema = new mongoose.Schema({
   scrapedDate:{ type: Date, default: Date.now },
   updatedDate:{ type: Date, default: Date.now },
   listingDate:Date,
+  source:String,
+  active:Boolean,
   version:Number
 });
 

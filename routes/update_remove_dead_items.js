@@ -46,12 +46,12 @@ var Schema = mongoose.Schema;
 
 var FreeItem = require('../models/freeitem');
 
-var regex_date     = /(.*)(<span>Date :<\/span>)(.*)/i;
-var regex_Location = /(.*)(<span>Location :<\/span>)(.*)/i;
-//var regex_postcode = /([A-Z]?\d(:? \d[A-Z]{2})?|[A-Z]\d{2}(:? \d[A-Z]{2})?|[A-Z]{2}\d(:? \d[A-Z]{2})?|[A-Z]{2}\d{2}(:? \d[A-Z]{2})?|[A-Z]\d[A-Z](:? \d[A-Z]{2})?|[A-Z]{2}\d[A-Z](:? \d[A-Z]{2})?)/i;
-var regex_postcode = /[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}/i; //the previous one didnt work for me...
+// var regex_date     = /(.*)(<span>Date :<\/span>)(.*)/i;
+// var regex_Location = /(.*)(<span>Location :<\/span>)(.*)/i;
+// //var regex_postcode = /([A-Z]?\d(:? \d[A-Z]{2})?|[A-Z]\d{2}(:? \d[A-Z]{2})?|[A-Z]{2}\d(:? \d[A-Z]{2})?|[A-Z]{2}\d{2}(:? \d[A-Z]{2})?|[A-Z]\d[A-Z](:? \d[A-Z]{2})?|[A-Z]{2}\d[A-Z](:? \d[A-Z]{2})?)/i;
+// var regex_postcode = /[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}/i; //the previous one didnt work for me...
 
-var google_geo_API_key = 'AIzaSyB0dSr4sTyQSykONifcifY6RbCO2KvyQpQ'; //goto the API manager and restrict this to the correct domain once it is in the wild
+// var google_geo_API_key = 'AIzaSyB0dSr4sTyQSykONifcifY6RbCO2KvyQpQ'; //goto the API manager and restrict this to the correct domain once it is in the wild
 //https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyB0dSr4sTyQSykONifcifY6RbCO2KvyQpQ
 
 /* GET home page. */
@@ -59,7 +59,10 @@ router.get('/', function(req, res) {
 
       removeDeadItems();
 
-      var stream = FreeItem.find().stream();
+      var stream = FreeItem
+      .find()
+      .limit(100)
+      .stream();
       stream.on('data', function (doc) {
 
         checkDeadItemPage(doc.url);
@@ -80,7 +83,7 @@ router.get('/', function(req, res) {
 module.exports = router;
 
 function removeDeadItems(){
-      var stream2 = FreeItem.find({ "deaditem":true }).stream();
+      var stream2 = FreeItem.find({ "active":false }).stream();
       stream2.on('data', function (doc) {
 
         doc.remove();
@@ -122,7 +125,7 @@ function checkDeadItemPage(item_url){
                   console.log("DELETE DELETE DELETE");
                   var query = {'url': this_link };
                   var update = {
-                      deaditem: true
+                      "active": false
                   };
                   //var options = { upsert: true };
                   var options = {  };
@@ -133,7 +136,7 @@ function checkDeadItemPage(item_url){
                           if (!result) {
                               // Create it
                               result = new FreeItem({
-                                deaditem: true
+                                "active": false
                               });
                               //console.log("Saved new");
                           } else {

@@ -89,7 +89,7 @@ router.get('/groups', function(req, res) {
 });
 router.get('/group/:groupString', function(req, res) { 
   mongoose.model('Item')
-    .find({ freecycleGroup: { $regex : new RegExp( req.params.groupString, "i") } })
+    .find({ "active":"true", freecycleGroup: { $regex : new RegExp( req.params.groupString, "i") } })
     .sort({postdata: -1})
     .limit(100)
     .exec( function (err, items) {
@@ -107,7 +107,7 @@ router.get('/group/:groupString', function(req, res) {
 
 router.get('/latest', function(req, res) { 
   mongoose.model('Item')
-    .find({})
+    .find({"active":"true"})
     .limit(100)
     .sort({postdata: -1})
     .exec(function (err, items) {
@@ -122,6 +122,35 @@ router.get('/latest', function(req, res) {
         }     
     });
 });
+
+
+// router.get('/ip', function(req, res) { 
+//   mongoose.model('ipaddress')
+//     .find({})
+//     //.limit(100)
+//     //.sort({postdata: -1})
+//     .exec(function (err, data) {
+//         if (err) {
+//             return console.error(err);
+//         } else {
+//              res.json(data);
+//         }     
+//     });
+// });
+
+// router.get('/dump_all', function(req, res) { 
+//   mongoose.model('ipaddress')
+//     .find({})
+//     //.limit(100)
+//     //.sort({postdata: -1})
+//     .exec(function (err, data) {
+//         if (err) {
+//             return console.error(err);
+//         } else {
+//              res.json(data);
+//         }     
+//     });
+// });
 
 
 getClientAddress = function (req) {
