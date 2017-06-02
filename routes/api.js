@@ -389,6 +389,7 @@ router.get('/groups', function(req, res) {
   getClientAddress(req);
   mongoose.model('FreeGroup')
     // .find({"active":"true"})   //dont need this i dont think
+    .find({}) 
     .exec(function (err, groups) {
       //console.log("%j", groups);
               if (err) {
