@@ -388,7 +388,7 @@ router.get('/groups/autocomplete', function(req, res) {
 router.get('/groups', function(req, res) {
   getClientAddress(req);
   mongoose.model('FreeGroup')
-    .find({"active":"true"})
+    // .find({"active":"true"})   //dont need this i dont think
     .exec(function (err, groups) {
       //console.log("%j", groups);
               if (err) {
