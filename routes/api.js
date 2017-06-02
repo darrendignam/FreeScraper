@@ -424,13 +424,13 @@ getClientAddress = function (req) {
         route: tmp_url 
     });
 
-    user_instance.save(function(err) {
-      if(err) {
-        console.log(err);  // handle errors!
-      } else {
-        console.log("saving ip ...");
-      }
-    });
+    // user_instance.save(function(err) {
+    //   if(err) {
+    //     console.log(err);  // handle errors!
+    //   } else {
+    //     console.log("saving ip ...");
+    //   }
+    // });
 
     return tmp_IP +' @ '+ tmp_url;
 };

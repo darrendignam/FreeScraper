@@ -124,33 +124,71 @@ router.get('/latest', function(req, res) {
 });
 
 
-// router.get('/ip', function(req, res) { 
-//   mongoose.model('ipaddress')
-//     .find({})
-//     //.limit(100)
-//     //.sort({postdata: -1})
-//     .exec(function (err, data) {
-//         if (err) {
-//             return console.error(err);
-//         } else {
-//              res.json(data);
-//         }     
-//     });
-// });
+router.get('/ip', function(req, res) { 
+  mongoose.model('ipaddress')
+    .find({})
+    //.limit(100)
+    //.sort({postdata: -1})
+    .exec(function (err, data) {
+        if (err) {
+            return console.error(err);
+        } else {
+             res.json(data);
+        }     
+    });
+});
 
-// router.get('/dump_all', function(req, res) { 
-//   mongoose.model('ipaddress')
-//     .find({})
-//     //.limit(100)
-//     //.sort({postdata: -1})
-//     .exec(function (err, data) {
-//         if (err) {
-//             return console.error(err);
-//         } else {
-//              res.json(data);
-//         }     
-//     });
-// });
+/*
+db.ipaddresses.aggregate(
+{
+    "$project" :
+    {
+       _id : 0,
+       "datePartDay" : {"$concat" : [
+           {"$substr" : [{"$dayOfMonth" : "$LastUpdate"}, 0, 2]}, "-",
+           {"$substr" : [{"$month" : "$LastUpdate"}, 0, 2]}, "-",
+           {"$substr" : [{"$year" : "$LastUpdate"}, 0, 4]}
+      ] }
+    }
+},
+{ "$group" :
+    { "_id" : "$datePartDay", "Count" : { "$sum" : 1 } }
+    }
+)
+*/
+
+router.get('/ip_group', function(req, res) { 
+  mongoose.model('ipaddress')
+    //.find({})
+    .aggregate(
+      [   
+          {   $project : { day : {$substr: ["$updatedDate", 0, 10] }}},        
+          {   $group   : { _id : "$day",  number : { $sum : 1 }}},
+          {   $sort    : { _id : 1 }}        
+      ]
+    )
+    .exec(function (err, data) {
+        if (err) {
+            return console.error(err);
+        } else {
+             res.json(data);
+        }     
+    });
+});
+
+router.get('/dump_all', function(req, res) { 
+  mongoose.model('ipaddress')
+    .find({})
+    //.limit(100)
+    //.sort({postdata: -1})
+    .exec(function (err, data) {
+        if (err) {
+            return console.error(err);
+        } else {
+             res.json(data);
+        }     
+    });
+});
 
 
 getClientAddress = function (req) {
@@ -161,13 +199,13 @@ getClientAddress = function (req) {
         route: tmp_url 
     });
 
-    user_instance.save(function(err) {
-      if(err) {
-        console.log(err);  // handle errors!
-      } else {
-        console.log("saving ip ...");
-      }
-    });
+    // user_instance.save(function(err) {
+    //   if(err) {
+    //     console.log(err);  // handle errors!
+    //   } else {
+    //     console.log("saving ip ...");
+    //   }
+    // });
 
     return tmp_IP +' @ '+ tmp_url;
 };
