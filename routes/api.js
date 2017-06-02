@@ -68,7 +68,7 @@ var ipaddress= require('../models/ipaddress');
 /* GET home page. */
 router.get('/', function(req, res) {
   getClientAddress(req);
-  res.render('index', { title: 'FreeScraper - freecycle scanner written in NodeJS' });
+  res.render('index', { title: 'searchfree.top - freecycle search engine in NodeJS' });
 });
 
 router.get('/all', function(req, res) {

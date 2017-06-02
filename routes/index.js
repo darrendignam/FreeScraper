@@ -50,12 +50,12 @@ var FreeGroup = require('../models/freegroup');
 router.get('/', function(req, res) {
   //console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress(req));
   
-  res.render('index', { title: 'FreeScraper' });
+  res.render('index', { title: 'searchfree.top' });
 });
 
 router.get('/search', function(req, res) {
   //console.log('Route: index.js IP:' + req.ips + '   X-Forward: ' + getClientAddress(req));
-  res.render('search_freescraper', { title: 'FreeScraper' });
+  res.render('search_freescraper', { title: 'searchfree.top' });
 });
 
 router.get('/about', function(req, res) {
