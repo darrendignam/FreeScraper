@@ -86,6 +86,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+
+app.use('/zip_scrape', require('./routes/scrape_zip'));
+
 app.use('/api', api);
 app.use('/fc', fc);
 app.use('/fc_2', fc_2);
