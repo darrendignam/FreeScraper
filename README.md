@@ -34,7 +34,7 @@ the actual scraping scripts can be found in the routes/ folder within the app. W
 
 ## What next?
 
-The code is very simple, and could do with a lot of improvement. If you look at the code you can easily see whats going on - even if you have never used node or javascript before, and you can easily tweak and fiddle to get the response you want. Read through fc_2 fc_3 and fc_6 in taht order and I think you will have a good idea of whats going on.
+The code is very simple, and could do with a lot of improvement. If you look at the code you can easily see whats going on - even if you have never used node or javascript before, and you can easily tweak and fiddle to get the response you want. Read through fc_2 fc_3 and fc_6 in that order and I think you will have a good idea of whats going on.
 
 The next step would be to start saving items into a database and regularly scraping for new additions to the freecycle groups. Then searches would be against the database - not the actual freecycle site. Which would speed things up, and reduce the burden on the freecycle servers, as the scrape can be a bit intense perhaps?
 
