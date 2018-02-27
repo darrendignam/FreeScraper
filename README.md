@@ -30,7 +30,7 @@ The homepage helps you navigate to one of the three scripts that can scrape free
 
 I find the mega list is more useful for looking for items, as you can Commad-F / CTRL-F that page and find all the 'desks' on offer in London. The detailed view is a bit similar to what freecycle already offer. There is a script that combines a few of the north London detailed responses together that is a bit more useful than the official freecycle site.
 
-the actual scraping scripts can be found in the routes/ folder within the app. With fc_ names. 
+The actual scraping scripts can be found in the routes/ folder within the app. With fc_ names. 
 
 ## What next?
 
